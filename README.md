@@ -19,6 +19,8 @@ b: number of bytes per message block
 f: number of finalization rounds  
 l: hash length in bits  
 
+_______
+
 ## algorithm
 
 I = number of initialization rounds  
