@@ -42,20 +42,20 @@ All block word indicies are modulo the number of words.
 ### schedule words
 
 8-bit  
-AA  
-1B
+initialization value: AA  
+addend: 1B
 
 16-bit  
-AAAA  
-3977
+initialization value: AAAA  
+addend: 3977
 
 32-bit  
-AAAAAAAA  
-89ABCDEF
+initialization value: AAAAAAAA  
+addend: 89ABCDEF
 
 64-bit  
-AAAAAAAAAAAAAAAA  
-0123456789ABCDEF
+initialization value: AAAAAAAAAAAAAAAA  
+addend: 0123456789ABCDEF
 
 
 ### transformation function
