@@ -1,0 +1,98 @@
+Opal SHA-3
+algorithm
+
+
+all words are 64-bit
+bytes are loaded with little-endian ordering
+
+The state is a 5x5 array of words.
+row-major indexing
+
+The state is zeroed at the start. The first part of the state is the "rate", the rest is the "capacity". The capacity is twice the hash size. The data is XORed with the rate. After each rate-sized data block the whole state is transformed with a mix function. After the data is a two bit suffix: a clear bit, followed by a set bit. After the suffix are two set bits. In between those two set bits are as many clear bits as are needed to fill the last block. The suffix and padding bits use little endian bit ordering within bytes.
+
+After all of the data is processed, the hash is read from the rate. If the rate does not provide enough bits, the state is mixed again and the rate is read again.
+
+
+The mix function is 24 rounds of 5 steps.
+
+theta step
+
+for x = 0 to 4 do
+ C[x] = a[x, 0]
+ for y = 1 to 4 do
+  C[x] = C[x] XOR a[x, y]
+ end for
+end for
+for x = 0 to 4 do
+ D[x] = C[x - 1] XOR ROTL(C[x + 1], 1)
+ for y = 0 to 4 do
+  A[x, y] = a[x, y] XOR D[x]
+ end for
+end for
+
+
+rho step
+
+for x = 0 to 4 do
+ for y = 0 to 4 do
+  A[x, y] = ROTL(a[x, y], r[x, y])
+ end for
+end for
+
+
+pi step
+
+for x = 0 to 4 do
+ for y = 0 to 4 do
+  A[y, 2x + 3y] = a[x, y]
+ end for
+end for
+
+
+chi step
+
+for x = 0 to 4 do
+ for y = 0 to 4 do
+  A[x, y] = a[x, y] XOR ((NOT a[x + 1, y]) AND a[x + 2, y])
+ end for
+end for
+
+
+iota step
+
+XOR the first word with a round constant
+
+ 0: 0000000000000001
+ 1: 0000000000008082
+ 2: 800000000000808A
+ 3: 8000000080008000
+ 4: 000000000000808B
+ 5: 0000000080000001
+ 6: 8000000080008081
+ 7: 8000000000008009
+ 8: 000000000000008A
+ 9: 0000000000000088
+10: 0000000080008009
+11: 000000008000000A
+12: 000000008000808B
+13: 800000000000008B
+14: 8000000000008089
+15: 8000000000008003
+16: 8000000000008002
+17: 8000000000000080
+18: 000000000000800A
+19: 800000008000000A
+20: 8000000080008081
+21: 8000000000008080
+22: 0000000080000001
+23: 8000000080008008
+
+
+r array
+
+ 0, 36,  3, 41, 18
+ 1, 44, 10, 45,  2
+62,  6, 43, 15, 61
+28, 55, 25, 21, 56
+27, 20, 39,  8, 14
+
