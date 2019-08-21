@@ -1,0 +1,72 @@
+Opal BLAKE2b
+algorithm
+
+
+This algorithm uses 64-bit words.
+Bytes are packed in little-endian order.
+
+V = 16 word state
+H = 8 word chain value
+C = 8 word constant array
+M = 16 word message block
+T = 2 word count of bytes read so far
+
+constants (hexadecimal)
+6A09E667F3BCC908, BB67AE8584CAA73B,
+3C6EF372FE94F82B, A54FF53A5F1D36F1,
+510E527FADE682D1, 9B05688C2B3E6C1F,
+1F83D9ABFB41BD6B, 5BE0CD19137E2179
+
+hash M:
+H = C
+H[0] XOR= 0x01010000 OR hash_byte_length
+next_block(M)
+while M is not last message block
+ V[0..7] = H
+ V[8..15] = C
+ V[12..13] XOR= T
+ mix(V, M)
+ H XOR= V[0..7] XOR V[8..15]
+ next_block(M)
+V[0..7] = H
+V[8..15] = C
+V[12..13] XOR= T
+V[14] = NOT V[14]
+mix(V, M)
+H XOR= V[0..7] XOR V[8..15]
+output bytes from H
+
+mix V and M:
+R = 0
+for round = 0 to 11 do
+ G(0, R, M, V[0], V[4], V[8], V[12])
+ G(1, R, M, V[1], V[5], V[9], V[13])
+ G(2, R, M, V[2], V[6], V[10], V[14])
+ G(3, R, M, V[3], V[7], V[11], V[15])
+ G(4, R, M, V[0], V[5], V[10], V[15])
+ G(5, R, M, V[1], V[6], V[11], V[12])
+ G(6, R, M, V[2], V[7], V[8], V[13])
+ G(7, R, M, V[3], V[4], V[9], V[14])
+ if ++R == 10
+  R = 0
+
+G function of I, R, M, A, B, C, and D:
+A += B + M[sigma[R, 2I]]
+D = (D XOR A) >>> 32
+C += D
+B = (B XOR C) >>> 24
+A += B + M[sigma[R, 2I + 1]]
+D = (D XOR A) >>> 16
+C += D
+B = (B XOR C) >>> 63
+
+sigma 0: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+sigma 1: 14, 10, 4, 8, 9, 15, 13, 6, 1, 12, 0, 2, 11, 7, 5, 3
+sigma 2: 11, 8, 12, 0, 5, 2, 15, 13, 10, 14, 3, 6, 7, 1, 9, 4
+sigma 3: 7, 9, 3, 1, 13, 12, 11, 14, 2, 6, 5, 10, 4, 0, 15, 8
+sigma 4: 9, 0, 5, 7, 2, 4, 10, 15, 14, 1, 11, 12, 6, 8, 3, 13
+sigma 5: 2, 12, 6, 10, 0, 11, 8, 3, 4, 13, 7, 5, 15, 14, 1, 9
+sigma 6: 12, 5, 1, 15, 14, 13, 4, 10, 0, 7, 6, 3, 9, 2, 8, 11
+sigma 7: 13, 11, 7, 14, 12, 1, 3, 9, 5, 0, 15, 4, 8, 6, 2, 10
+sigma 8: 6, 15, 14, 9, 11, 3, 0, 8, 12, 2, 13, 7, 1, 4, 10, 5
+sigma 9: 10, 2, 8, 4, 7, 6, 1, 5, 15, 11, 9, 14, 3, 12, 13, 0
