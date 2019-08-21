@@ -1,0 +1,16 @@
+Opal SHA-3
+for Unix
+
+This program computes hashes of files to verify data integrity.
+
+By default, the program computes the hash of a stream of input data from standard input.
+
+In list mode, the program interprets standard input as a list of file names seperated by newline characters and outputs the hash of each file followed by a space, the file name, and a newline.
+
+In check mode, the program reads a stream that was previously output by the program in list mode and outputs each file name followed by either ": OK" or ": FAILED" depending on whether the hash matches.
+
+options_
+h: print help and exit
+l: list mode
+c: check mode
+s: hash length in bits (must be a multiple of 8, at least 8, not more than 792, default: 512)
