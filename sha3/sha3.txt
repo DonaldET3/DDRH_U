@@ -18,4 +18,5 @@ options_
 h: print help and exit
 l: list mode
 c: check mode
-s: hash length in bits (must be a multiple of 8, at least 8, not more than 792, default: 512)
+s: hash length in bits (must be a multiple of 8, at least 8, not more than 792,
+   default: 512)
