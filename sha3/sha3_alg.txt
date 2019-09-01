@@ -8,9 +8,17 @@ bytes are loaded with little-endian ordering
 The state is a 5x5 array of words.
 row-major indexing
 
-The state is zeroed at the start. The first part of the state is the "rate", the rest is the "capacity". The capacity is twice the hash size. The data is XORed with the rate. After each rate-sized data block the whole state is transformed with a mix function. After the data is a two bit suffix: a clear bit, followed by a set bit. After the suffix are two set bits. In between those two set bits are as many clear bits as are needed to fill the last block. The suffix and padding bits use little endian bit ordering within bytes.
+The state is zeroed at the start. The first part of the state is the "rate",
+the rest is the "capacity". The capacity is twice the hash size. The data is
+XORed with the rate. After each rate-sized data block the whole state is
+transformed with a mix function. After the data is a two bit suffix: a clear
+bit, followed by a set bit. After the suffix are two set bits. In between those
+two set bits are as many clear bits as are needed to fill the last block. The
+suffix and padding bits use little endian bit ordering within bytes.
 
-After all of the data is processed, the hash is read from the rate. If the rate does not provide enough bits, the state is mixed again and the rate is read again.
+After all of the data is processed, the hash is read from the rate. If the rate
+does not provide enough bits, the state is mixed again and the rate is read
+again.
 
 
 The mix function is 24 rounds of 5 steps.
